@@ -97,7 +97,8 @@ impl GlutinWindowWrapper {
                 WindowCommand::TitleChanged(new_title) => self.handle_title_changed(new_title),
                 WindowCommand::SetMouseEnabled(mouse_enabled) => {
                     self.mouse_manager.enabled = mouse_enabled
-                }
+                },
+                WindowCommand::FinishedStartup => unreachable!(),
             }
         }
     }

@@ -91,7 +91,11 @@ pub fn create_window(
     ui_command_sender: LoggingTx<UiCommand>,
     running: Arc<AtomicBool>,
 ) {
+    // TODO(smolck): How actually to do this right?
+    assert_eq!(window_command_receiver.recv().unwrap(), WindowCommand::FinishedStartup);
+
     let (width, height) = window_geometry_or_default();
+    println!("{}, {}", width, height);
 
     let renderer = Renderer::new(batched_draw_command_receiver);
     let logical_size = (

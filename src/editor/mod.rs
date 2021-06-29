@@ -59,10 +59,11 @@ pub enum DrawCommand {
     ModeChanged(EditorMode),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum WindowCommand {
     TitleChanged(String),
     SetMouseEnabled(bool),
+    FinishedStartup,
 }
 
 pub struct Editor {

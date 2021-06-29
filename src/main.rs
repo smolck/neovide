@@ -44,7 +44,7 @@ use settings::SETTINGS;
 use window::{create_window, window_geometry, WindowSettings};
 
 pub use channel_utils::*;
-pub const INITIAL_DIMENSIONS: (u64, u64) = (100, 50);
+pub const INITIAL_DIMENSIONS: (u64, u64) = (50, 100);
 
 fn main() {
     //  -----------
@@ -190,6 +190,7 @@ fn main() {
         logging_ui_command_sender.clone(),
         ui_command_receiver,
         logging_redraw_event_sender,
+        logging_window_command_sender.clone(),
         running.clone(),
     );
     start_editor(

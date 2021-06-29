@@ -20,6 +20,7 @@ use crate::channel_utils::*;
 use crate::settings::*;
 use crate::window::window_geometry_or_default;
 use crate::{cmd_line::CmdLineSettings, error_handling::ResultPanicExplanation};
+use crate::editor::WindowCommand;
 pub use events::*;
 use handler::NeovimHandler;
 use regex::Regex;
@@ -160,6 +161,7 @@ async fn start_neovim_runtime(
     ui_command_sender: LoggingTx<UiCommand>,
     ui_command_receiver: RxUnbounded<UiCommand>,
     redraw_event_sender: LoggingTx<RedrawEvent>,
+    window_command_sender: LoggingSender<WindowCommand>,
     running: Arc<AtomicBool>,
 ) {
     let (width, height) = window_geometry_or_default();
@@ -288,6 +290,7 @@ async fn start_neovim_runtime(
         .unwrap_or_explained_panic("Could not attach ui to neovim process");
 
     info!("Neovim process attached");
+    window_command_sender.send(WindowCommand::FinishedStartup).unwrap();
 
     let nvim = Arc::new(nvim);
 
@@ -326,6 +329,7 @@ pub fn start_bridge(
     ui_command_sender: LoggingTx<UiCommand>,
     ui_command_receiver: RxUnbounded<UiCommand>,
     redraw_event_sender: LoggingTx<RedrawEvent>,
+    window_command_sender: LoggingSender<WindowCommand>,
     running: Arc<AtomicBool>,
 ) -> Bridge {
     let runtime = Runtime::new().unwrap();
@@ -333,6 +337,7 @@ pub fn start_bridge(
         ui_command_sender,
         ui_command_receiver,
         redraw_event_sender,
+        window_command_sender,
         running,
     ));
     Bridge { _runtime: runtime }
