@@ -26,8 +26,15 @@ fn use_alt(alt: bool) -> bool {
 // The option or alt key is used on Macos for character set changes
 // and does not operate the same as other systems.
 #[cfg(target_os = "macos")]
+#[cfg(not(feature = "alt-as-meta"))]
 fn use_alt(_: bool) -> bool {
     false
+}
+
+#[cfg(target_os = "macos")]
+#[cfg(feature = "alt-as-meta")]
+fn use_alt(alt: bool) -> bool {
+    alt
 }
 
 fn or_empty(condition: bool, text: &str) -> &str {
@@ -173,6 +180,13 @@ impl KeyboardManager {
                                     } else {
                                         key_event.text
                                     };
+
+                                #[cfg(feature = "alt-as-meta")]
+                                let key_text = if self.alt {
+                                    key_event.key_without_modifiers().to_text()
+                                } else {
+                                    key_event.text
+                                };
 
                                 if let Some(key_text) = key_text {
                                     // This is not a control key, so we rely upon winit to determine if

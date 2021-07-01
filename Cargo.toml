@@ -13,6 +13,7 @@ members = ["neovide-derive"]
 [features]
 default = []
 embed-fonts = []
+alt-as-meta = []
 
 [dependencies]
 neovide-derive = { path = "neovide-derive" }
